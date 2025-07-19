@@ -4,6 +4,10 @@ services:
     working_dir: /var/www/html
     # extra_hosts:
     #   - host.docker.internal:host-gateway
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=false"
     volumes:
       - '.:/var/www/html'
       - './docker/php-fpm/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini'
@@ -29,6 +33,10 @@ services:
     image: 'mysql:8.0'
     volumes:
       - './docker/mysql:/var/lib/mysql'
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=false"
     environment:
       - MYSQL_ROOT_PASSWORD=secret
       - MYSQL_DATABASE=easyappointments
@@ -41,12 +49,20 @@ services:
     image: 'phpmyadmin:5.2.1'
     ports:
       - '8080:80'
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=false"
     environment:
       - 'PMA_HOST=mysql'
       - 'UPLOAD_LIMIT=102400K'
 
   mailpit:
     image: 'axllent/mailpit:v1.7'
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=false"
     ports:
       - '8025:8025'
       - '1025:1025'
@@ -56,6 +72,10 @@ services:
     image: swaggerapi/swagger-ui:v5.10.5
     ports:
       - "8000:8080"
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=false"
     volumes:
       - ./openapi.yml:/usr/share/nginx/html/openapi.yml
     environment:
@@ -65,6 +85,10 @@ services:
     image: ckulka/baikal:0.10.1-apache
     ports:
       - "8100:80"
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=false"
     volumes:
       - ./docker/baikal:/var/www/html
       - ./docker/baikal/config:/var/www/baikal/config
@@ -76,6 +100,10 @@ services:
     ports:
       - "389:389"
       - "636:636"
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=false"
     volumes:
       - ./docker/openldap/certificates:/container/service/slapd/assets/certs
       - ./docker/openldap/slapd/database:/var/lib/ldap
@@ -94,6 +122,10 @@ services:
   phpldapadmin:
     image: osixia/phpldapadmin:0.9.0
     hostname: phpldapadmin
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=false"
     ports:
       - "8200:80"
     environment:
